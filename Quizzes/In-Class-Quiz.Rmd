@@ -1,0 +1,87 @@
+---
+title: "Quiz 1 in class"
+author: "Grace Wysocki"
+date: "1/26/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Complete this quiz in a .Rmd file.
+
+Statement of Integrity: Copy and paste the following statement and then sign your name (by typing it) on the line below.
+
+“All work presented is my own. I have not communicated with or worked with anyone else on this quiz.”
+
+Grace Wysocki
+
+Collaboration Reminder: You may not communicate with or work with anyone else on this quiz, but you may use any of our course materials or materials on the Internet.
+
+
+
+Question 1 (5 points). Consider the following graph:
+```{r}
+library(tidyverse)
+category <- rep(c("Group 1", "Group 2", "Group 3", "Group 4", "Group 5"), 7)
+time <- rep(c(2000, 2001, 2002, 2003, 2004, 2005, 2006), each = 5) 
+response <- rpois(length(category), 30)
+df <- tibble(category, time, response)
+ggplot(data = df, aes(x = time, y = response)) +
+  geom_col(aes(fill = category)) +
+  labs(y = "count")
+```
+
+For which category is it easiest to see the overall trend in the count? Use terminology from our course reading to give a one sentence reason for your selection.
+
+It is easiest to see the overall trend of Group 5 because it is on the bottom touching the x-axis. This allows the data mapping to have a baseline which makes comparing the heights easier. The other categories do not start on the same line count making them harder to read.
+
+Question 2 (4 points). Take the chart from Question 1 and use faceting to display the data from df in each group instead of colour.
+
+```{r}
+category <- rep(c("Group 1", "Group 2", "Group 3", "Group 4", "Group 5"), 7)
+time <- rep(c(2000, 2001, 2002, 2003, 2004, 2005, 2006), each = 5) 
+response <- rpois(length(category), 30)
+df <- tibble(category, time, response)
+ggplot(data = df, aes(x = time, y = response)) +
+  geom_col(aes(fill = category)) +
+  labs(y = "count") + facet_wrap("category")
+```
+
+
+Question 3a (3 points). Suppose that we want to make a map of the United States, and colour each state by the percent change in Covid cases this week compared to last week. States with an increase would have a positive percent change while states with a decrease would have a negative percent change. Should we use a sequential, diverging, or unordered colour scale to colour the states? Give a one phrase or one sentence explanation.
+
+I think we should use a diverging color scale to order the states increases and decreases because with this scale we can think of the middle white value to be no change in cases, and red showing increases while blue shows decreases.
+
+Question 3b (3 points). Suppose that, in our map, we now want to colour the states by the number of covid cases per 100,000 people. Should we use a sequential, diverging, or unordered colour scale to colour the states? Give a one phrase or one sentence explanation.
+
+In this case I would uses a sequestial scale because then the graph would show a clear gradient of where the most covid cases are by area. 
+
+Question 4 (4 points). Which of the parameters in the Grammar of Graphics are explicitly specified or changed in the following plot:
+```{r}
+ggplot(data = df, aes(x = time, y = response)) +
+  geom_col(aes(fill = category)) +
+  coord_flip()
+```
+
+Coordinate Function
+
+Question 5a. (2 points). What would you need to change in the code below so that the points are all coloured blue? Make the change and then give a one sentence explanation of why you need to make that change.
+```{r}
+ggplot(data = df, aes(x = time, y = response)) +
+  geom_point(color = "blue")
+```
+
+You just need to remove the aes from inside the geom_point() because it is unnecessay and confuses the data.
+
+Question 5b (4 points). What would you need to change in the code below to only have a single smoother for an overall trend (instead of one smoother for each category)? Make the change and then give a one sentence explanation of why you need to make that change.
+```{r}
+ggplot(data = df, aes(x = time, y = response, colour = category)) +
+  geom_point() +
+  geom_smooth()
+```
+
+You would just put a remove all the extra data in the geom_smooth().
+
+Submit a knitted .html file to Sakai.
