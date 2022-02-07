@@ -1,0 +1,72 @@
+---
+title: "Exercise 3"
+author: "Grace Wysocki"
+date: "2/6/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Exercises 3: Complete Section 8.1.2: General Principles on general principles of ethics and Section 8.2: Sensitive Data Viz in our course notes (including all exercises in these sections)
+
+8.1.2 General Principles
+Read Sections 8.1 through 8.3 of Modern Data Science with R, found here.
+
+Exercise 1. Pick 1 of the 3 examples (stand your ground, climate change, or covid cases), and summarize why that graphic is not ethical. Make sure to include the context that the graph was created in from Section 8.3 in your explanation.
+
+The Stand Your Ground graphic was not ethical because it disobeys the laws of ethics of data science. By flipping the label scale of the y-axis, it misleadingly flips the graph in general upside down, creating a perception of increases where there are actually decreases, and vise versa. This gives the viewer the impression that right after the passage of the 2005 law, the number of murders decreased substantially, when really since the graph is flipped upside down, that they increases substantially. This makes it seem as though the law decreaed murder rates when it really increased them.
+
+Read the short Section 8.5 of Modern Data Science with R, found here, stopping at Section 8.5.1.
+
+Exercise 2. Choose 2 of the 12 principles of ethical practice of data science and come up a (possibly hypothetical) scenario where each of your two chosen principles would come into play.
+
+6) Be open to changing our methods and conclusions in response to new knowledge.
+
+If you created a data set of the correlation between mask wearing and spread of covid-19, and came to a conclusion that masks do not stop the spread of covid-19. But the data came from participants who only wore cloth mask, which have now been proven to not be as effective as surgical and KN-95, then you would need to explictly say that this is specifically in regards to cloth mask, and it would be benefical od the data scientists to recollect data from participants wearing KN-95s and surgical masks, before making a general conclusion on the matter.
+
+11) Protect the privacy and security of individuals represented in our data.
+
+This could come into play if you were using a group of people's individual data and rather than labeling the people as "participant #1" you put their actual name. This is dangerous to the privancy of your participants.
+
+With any data visualization, we need to think critically about what data is actually being visualized as well as the context that the data came from. Consider the following exercise.
+
+Exercise 3a. Find a graphic on the Internet that shows evidence that the Covid vaccine has “worked.”
+
+https://www.businessinsider.com/cdc-charts-show-pfizer-vaccine-works-against-covid-delta-2021-8
+
+Exercise 3b. Find a graphic on the Internet that shows evidence that the Covid vaccine has “not worked.”
+
+https://qz.com/1872980/how-bad-covid-19-data-visualizations-mislead-the-public/
+
+8.2 Sensitive Data Visualizations
+Warning: The following section deals with sensitive data on lynchings in the United States. If, at any point, working through these examples is detrimental to your mental health, please stop immediately. You may request an alternative assignment with no explanation necessary.
+
+When visualizing sensitive data, we not only need to consider the context that the data came from, but also we need to critically examine the ramifications of producing the graphic. In particular, if our data points are human beings that were killed, tortured, or mistreated, there is danger in “dehumanizing” these people to single data points.
+
+Consider the following two examples, both of which map lynchings in the United States.
+
+Example 1: First, this chloropleth map shows reported lynchings in the southern United States between 1877 and 1950. Take a few moments to zoom in and out of the map to get a sense about how the data is presented.
+
+Example 2: Second, this map shows similar data but the data is presented as individual points instead of on a chloropleth map. Take a few moments to zoom in and out of the map to get a sense about how the data is presented.
+
+Exercise 1. Which of the two visualizations better humanizes the victims of lynching? Why?
+
+I think example 2 better humanizes the victiums of lynching because it shows you each individual person rather than grouping that only go up to 20+, which does not give an exact number therefore dehumanizing and excluding people. Example 2 also labels by race which respects individuals races, cultures, and ethnicity and therefore humanizes the data more.
+
+Exercise 2. Suppose that you want to humanize the victims more in a static, non-interactive graph. Brainstorm ways that you could achieve this.
+
+Maybe you could create a color scale that colors by categories such as male or female, or color by age so you can acknowledge the deaths of children by lynching.
+
+Exercise 3. A deeper discussion of these sites appears in this paper. Read the Introduction section on TayTweets and write 3 major takeaways from this section.
+
+1) When collecting data or experimenting, you must think hard about the consequences/outcomes of your reasearch and how they can effect people who see it.
+
+2) When experimenting with something so pubic as social media, it might be smart to test out the experiment in a computer generated media source, as we saw here, experiments can really hurt people if not done correctly. The TayTweets account could have really affect people that saw their sweets, especially people of color.
+
+3) "On the contrary, humans are at the center of algorithms, not only as their creators but, in the case of data-driven algorithms, as the producers of the content they shape and present." I really liked this quote and never thought about algorithms in this was. It reminded me a lot of TikTok's "For You Page."
+
+Exercise 4. The authors of the book Data Feminism argue that “leveraging emotion” might help us better communicate with data. Read the first four paragraphs of Chapter 3 of the Data Feminism book. One example the authors use pertains to deaths from gun violence in the United States. Examine this animated chart. Explain how the chart uses emotion to convey the losses due to gun violence better than, for example, a statement that 11,356 people were killed from gun violence in 2018.
+
+I personally thought that this graph did a better job because you were able to see every individual person who died and the ages they could have lived to, rather than just a number of deaths. Also seeing the dealth count from a new perspective of years loss added a huge emotional toll on the graphic. It gave me that heart-skip-a-beat type of feeling. 
