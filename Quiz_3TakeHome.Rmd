@@ -1,0 +1,52 @@
+---
+title: "Quiz 3 TakeHome"
+author: "Grace Wysocki"
+date: "2/8/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Complete this Quiz in a .Rmd file. Submit a .Rmd and a knitted .html file to GitHub by the due date and time.
+
+Statement of Integrity: Copy and paste the following statement and then sign your name (by typing it) on the line below.
+
+“All work presented is my own, and I have followed all rules for collaboration.” Grace Wysocki
+
+Collaboration Reminder: You may work with other students who are in our class on the take-home quiz, but you must list who you worked with at the top of your quiz. Write the name of any student(s) that you collaborated with in the space below this (ignore this if you did not collaborate with any students).
+
+
+Question 1 (5 points). Consider the Challenger example in our course notes. Clearly, the graphic used to communicate the results is poorly made: it eliminates data points when it really should not. However, the engineers making the graph did not have “malicious intent:” they did not purposefully remove these data points to try to lie: it was a mistake. Is the visualization still unethical? Use principles from the Modern Data Science Readings to explain in a few sentences.
+
+Although I do believe that the engineers behind the graph did not intend to do any harm with their graph, I do think that it was unethical to leave out the data points with a Damage Index of 0. I think this because by leaving out those points, they removed a very important aspect of the graph, that is temperatures where completely safe launched occurred. By leaving out these points, the engineers I think broke the 2 of the 12 Data Values and Principles. Those are:
+
+8) Present our work in ways that empower others to make better-informed decisions.
+
+By leaving out those points, they did not empower the people behind the Challenger launch to make a better decision about waiting to launch until the temperature was at a degree that was previously deemed safe to travel with risk of damage.
+
+9) Consider carefully the ethical implications of choices we make when using data, and the impacts of our work on individuals and society.
+
+By not being more careful with the way the engineers displayed and removed their data points, they did not consider the impacts of their work on individuals and society in the case of the 7 lives lost in the Challenger launch incident. 
+
+Question 2 (4 points). Find a graphic online, other than any given in our course readings, that is unethical. Provide a link to your graphic and give a 2-3 sentence description explaining why that graphic is not ethical.
+
+Unemployment Rate Under Obama Graph: https://www.statisticshowto.com/probability-and-statistics/descriptive-statistics/misleading-graphs/
+
+Firstly this graph is unethical because the data was not plotted on a scale that started at 0, making the changes seen in the graph seem more significant than they really are. Secondly, the value for November (8.6) was plotted incorrectly. It was plitted at the 9.0 position which makes it look like there’s exponential growth when in fact, the overall employment trend is pretty stable at around 9%. 
+
+If you look below the graph on the website you will see a correctly plotted version which shows a different picture.
+
+
+Question 3 (3 points). Explain, in your own words, what each of the following Git terms mean:
+
+commit: The commit button creates a current copy of your file that can then be uploaded onto GitHub for people to use and add onto, or even for you to save a copy your work on. When you commit you'll have to write a descriptive message of what your data is or even the changes that you made to a previously commited file.
+
+push: Once you have committed a file in r, you then can "push" the file onto GitHub. This will move your file from R into your linked GitHub repository to share your work with other or just save that current version onto your GitHub account.
+
+pull: Once you have committed and pushed your file onto GitHub, you can "pull" that file from GitHub back into your RStudio account for you to edit. This is especially helpful when someone has made edits to a file in your repository and you want to add those edits into you r project.
+
+
+Question 4 (3 points). These three points are given if you successfully committed with a commit message and pushed your .Rmd and .html files to your GitHub account.
+
