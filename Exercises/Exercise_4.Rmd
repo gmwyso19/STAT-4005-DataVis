@@ -9,6 +9,7 @@ Exercises 4: Complete Section 6.6: Supplementary Exercises on Mapping in our cou
 
 Consider again the Happy Planet Index data that we worked with in Section 5.2 It may be helpful to reread the description of the data set.
 ```{r}
+library(readr)
 library(ggplot2)
 library(dplyr)
 require(maps)
@@ -16,7 +17,7 @@ require(viridis)
 theme_set(
   theme_void()
   )
-hpi_df <- read_csv("data/hpi-tidy.csv")
+hpi_df <- read_csv("User/gracewysocki/Desktop/STAT-4005-DataVis/data/hpi-tidy.csv")
 #> Rows: 151 Columns: 11
 #> ── Column specification ────────────────────────────────────
 #> Delimiter: ","
