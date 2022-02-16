@@ -1,0 +1,77 @@
+---
+title: "Exercise 4"
+author: "Grace Wysocki"
+date: "2/15/2022"
+output: html_document
+---
+
+Exercises 4: Complete Section 6.6: Supplementary Exercises on Mapping in our course notes. 
+
+Consider again the Happy Planet Index data that we worked with in Section 5.2 It may be helpful to reread the description of the data set.
+```{r}
+library(ggplot2)
+library(dplyr)
+require(maps)
+require(viridis)
+theme_set(
+  theme_void()
+  )
+hpi_df <- read_csv("data/hpi-tidy.csv")
+#> Rows: 151 Columns: 11
+#> ── Column specification ────────────────────────────────────
+#> Delimiter: ","
+#> chr (3): Country, GovernanceRank, Region
+#> dbl (8): HPIRank, LifeExpectancy, Wellbeing, HappyLifeYe...
+#> 
+#> ℹ Use `spec()` to retrieve the full column specification for this data.
+#> ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+hpi_df
+```
+
+Exericse 1. Make a map of a variable of your choosing. In coord_map(), use projection = "mercator", which is also the default (we will see in a later exercise that this probably is not the best choice).
+
+Hint: in ggplot2’s map_data() function, there is a built in map of the "world".
+
+Hint: You can read more about projections in Section 17.3.2 of Modern Data Science with R
+
+```{r}
+world <- map_data("world")
+
+world_map <- map_data("world")
+ggplot(world_map, aes(x = long, y = lat, group = group)) +
+  geom_polygon(fill="lightgray", colour = "white")
+
+world_map <- map_data("world")
+hpi_df <- right_join(hpi_df, world_map, by = "Country")
+
+
+ggplot(data = world_map,
+            mapping = aes(x = long, y = lat,
+                          group = group)) +
+  geom_polygon(colour = "black", fill = "lightgrey") +
+  coord_map(projection = "mercator") + 
+  theme_void()
+```
+
+I tried doing # geom_polygon(aes(fill = LifeExpectancy), colour = "white") to color by the variable LifeExpectancy but I kept getting an error. For the sake of time, since this one question has been taking me an hour to figure out, I am going to move on.
+
+Exercise 2. You may notice that the United States does not get coloured in your map. Examine this issue further and fix the map so that the United States is coloured.
+
+I was unable to color the map, therefore I am still unable to color the United States.
+
+Exercise 3. You may have noticed that there are two horizontal stripes across your map. This is an issue that drove me nuts! Check out this submitted issue on ggplot2’s GitHub page for the reason for the error as well as a fix. Use it to fix your plot.
+
+```{r}
+library(gridExtra)
+#world_map + coord_map(xlim=c(-180,180))
+```
+
+This is the code from the website, so I do not understand why it is not running.
+
+Exercise 4. Read about Mercator projections in this blog post. What does this source say about the sizes of Greenland vs. Africa in a Mercator projection.
+
+The source says that Greenland is 550% too big, and it be able to fit into Africa 14 times.
+
+Exercise 5. Examine all of the different options for map projection with ?mapproject. Then, change the projection to "globular". Change the projection again to "gilbert". How does the relative size of Greenland to Africa change in the projections? 
+ 
+ The size of Greenland shrinks significantly in these two projections, making the relative size more accurate, but still a bit too large.
