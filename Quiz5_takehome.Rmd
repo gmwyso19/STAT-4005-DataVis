@@ -1,0 +1,80 @@
+---
+title: 'Quiz 5: Take Home'
+author: "Grace Wysocki"
+date: "2/22/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Complete this Quiz in a .Rmd file. Submit a .Rmd and a knitted .html file to GitHub by the due date and time.
+
+Statement of Integrity: Copy and paste the following statement and then sign your name (by typing it) on the line below.
+
+“All work presented is my own, and I have followed all rules for collaboration.” Grace Wysocki
+
+Collaboration Reminder: You may work with other students who are in our class on the take-home quiz, but you must list who you worked with at the top of your quiz. Write the name of any student(s) that you collaborated with in the space below this (ignore this if you did not collaborate with any students).
+
+Maddox helped me out
+
+Use the STAT 113 survey data set to explore the trend in the popularity of Facebook over time. Do this in 2 ways:
+
+(7 points). Construct a graph that uses the number of Facebook friends each student has.
+
+```{r}
+library(readr)
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+stat113_survey <- read_csv("data/stat113_survey.csv")
+stat113_survey
+```
+
+
+```{r}
+survey_edit <- stat113_survey %>% filter(!is.na(Facebook)) %>% separate(time_both, into = c("semester", "year"),
+                               sep = 1) %>%
+  arrange(year, desc(semester)) %>%
+  unite(col = "time_both", c(semester, year)) %>%
+  mutate(time_both = fct_inorder(time_both))
+
+
+survey_facebook <- survey_edit %>% group_by(time_both) %>% summarise(meanfacebook = mean(Facebook), sdfacebook = sd(Facebook), nfacebook = n()) %>% 
+  mutate(l_se = meanfacebook - sdfacebook / sqrt(nfacebook),
+         u_se = meanfacebook - sdfacebook / sqrt(nfacebook))
+
+ggplot(data = survey_facebook, aes(x = time_both, y = meanfacebook)) +
+  geom_point() + 
+  labs(x = "Semester", y = "Average Number of Facebook Friends")
+ 
+```
+
+(7 points). Construct a graph that uses the proportion of students that have Facebook (assuming that 0 friends means that the student does not have a Facebook account and more than 0 friends means that the student does have a Facebook account).
+
+```{r}
+survey_facebook2 <- survey_edit %>% separate(time_both, into = c("semester", "year"),
+                               sep = 1) %>%
+  arrange(year, desc(semester)) %>%
+  unite(col = "time_both", c(semester, year)) %>%
+  mutate(time_both = fct_inorder(time_both)) %>% mutate(Facebook_account = if_else(Facebook > 0,
+                                            true = 1,
+                                            false = 0)) 
+
+prop_survey <- survey_facebook2  %>%
+  summarise(prop_facebook = sum(Facebook_account/3347))
+prop_survey
+
+#full_join()
+
+#ggplot(data = prop_survey, aes(x = , y = )) +
+  #geom_point() + 
+  
+
+
+```
+
+
+1 point is provided for committing and pushing to GitHub correctly.
