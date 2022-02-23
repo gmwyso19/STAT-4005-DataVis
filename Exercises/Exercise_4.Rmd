@@ -17,7 +17,7 @@ require(viridis)
 theme_set(
   theme_void()
   )
-hpi_df <- read_csv("User/gracewysocki/Desktop/STAT-4005-DataVis/data/hpi-tidy.csv")
+hpi_df <- read_csv("data/hpi-tidy.csv")
 #> Rows: 151 Columns: 11
 #> ── Column specification ────────────────────────────────────
 #> Delimiter: ","

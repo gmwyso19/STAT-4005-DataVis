@@ -1,0 +1,520 @@
+---
+title: "Tidyverse Review"
+output:
+  html_document:
+    df_print: paged
+editor_options:
+  chunk_output_type: inline
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+plot(cars) 
+```
+
+Aside: Baseline of Zero?
+
+```{r}
+#library(palmerpenguins)
+#ggplot(data = penguins, aes(x = bill_length_mm,
+                            #y = bill_depth_mm)) + 
+  #geom_point() + 
+  #xlim(c(0, 60)) +
+  #ylim(c(0, 25))
+```
+
+
+Section 5:
+
+5.1
+```{r}
+##install.packages("billboard")
+library(billboard)
+library(tidyverse)
+head(wiki_hot_100s)
+#>   no                     title              artist year
+#> 1  1 Theme from A Summer Place         Percy Faith 1960
+#> 2  2          He'll Have to Go          Jim Reeves 1960
+#> 3  3             Cathy's Clown The Everly Brothers 1960
+#> 4  4              Running Bear      Johnny Preston 1960
+#> 5  5                Teen Angel        Mark Dinning 1960
+#> 6  6                 I'm Sorry          Brenda Lee 1960
+tail(wiki_hot_100s)
+#>       no                   title
+#> 5696  95 Adventure of a Lifetime
+#> 5697  96         Humble and Kind
+#> 5698  97                  Wicked
+#> 5699  98           Tiimmy Turner
+#> 5700  99           See You Again
+#> 5701 100                 Perfect
+#>                                  artist year
+#> 5696                           Coldplay 2016
+#> 5697                         Tim McGraw 2016
+#> 5698                             Future 2016
+#> 5699                          Desiigner 2016
+#> 5700 Wiz Khalifa featuring Charlie Puth 2016
+#> 5701                      One Direction 2016
+```
+```{r}
+ wiki_sort1 <- wiki_hot_100s %>%
+  as_tibble() %>%
+  filter(year <= 2009 & year >= 2000) %>%
+  group_by(artist) %>%
+  summarise(nsongs = n()) %>% 
+  slice_max(n = 15, order_by = nsongs) %>%
+  mutate(artist = fct_reorder(artist, nsongs))
+
+wiki_sort1
+
+ggplot(data = wiki_sort1, aes(x = artist,
+                             y = nsongs)) + 
+  geom_col() + 
+  coord_flip()
+
+```
+
+Exercises 5.5.1:
+
+1) 
+```{r}
+wiki_sort1 <- wiki_hot_100s %>%
+  as_tibble() %>%
+  filter(year <= 2009 & year >= 2000) %>%
+  group_by(artist) %>%
+  summarise(nsongs = n()) %>% 
+  slice_max(n = 15, order_by = nsongs) %>%
+  mutate(artist = fct_reorder(artist, nsongs))
+
+wiki_sort1
+
+ggplot(data = wiki_sort1, aes(x = artist,
+                             y = nsongs)) + 
+  geom_col() + 
+  coord_flip()
+
+```
+
+2)
+```{r}
+tail(wiki_hot_100s)
+```
+I see that there are technically two artists in the song See You Again meaning that when we sort by artist, both artists will not receive credit for the song.
+
+3) Fix the problem above
+```{r}
+wiki_hot_100s %>% as_tibble() %>% 
+  mutate(artist2 = str_remove(artist,
+                              pattern = " featuring.*")) %>% 
+  tail() %>% 
+  print(width = Inf)
+
+```
+Exercise 2: Section 5.1 # 4, 5, 6, & 7
+
+4 & 5)
+```{r}
+# Libraries
+library(ggplot2)
+
+
+# Plot
+ggplot(wiki_sort1, aes(x = artist, y = nsongs)) +
+  geom_point(size=3, color="light blue", fill=alpha("blue", 0.3), alpha=0.7, shape=21, stroke=2) + 
+  geom_segment( aes(x=artist, xend=artist, y=0, yend=nsongs), color="dark blue")  + coord_flip()
+```
+Lollipop plots can be better than bar plots because the give a clear and emphasized endpoint.
+
+More code:
+```{r}
+
+max(wiki_hot_100s$year)
+#> [1] "2016"
+
+library(rvest)
+library(tidyverse)
+#> ── Attaching packages ─────────────────── tidyverse 1.3.1 ──
+#> ✓ ggplot2 3.3.5     ✓ purrr   0.3.4
+#> ✓ tibble  3.1.2     ✓ dplyr   1.0.7
+#> ✓ tidyr   1.1.3     ✓ stringr 1.4.0
+#> ✓ readr   2.0.2     ✓ forcats 0.5.1
+#> ── Conflicts ────────────────────── tidyverse_conflicts() ──
+#> x dplyr::filter()         masks stats::filter()
+#> x readr::guess_encoding() masks rvest::guess_encoding()
+#> x dplyr::lag()            masks stats::lag()
+
+## provide the URL and name it something (in this case, url).
+## paste0 pastes together the base URL and the year into a single string:
+## this will be useful in a moment
+year <- 2017
+url <- paste0("https://en.wikipedia.org/wiki/Billboard_Year-End_Hot_100_singles_of_", year)
+
+## convert the html code into something R can read
+h <- read_html(url)
+
+## grabs the tables
+tab <- h %>% html_nodes("table")
+df <- tab[[1]] %>% html_table() %>%
+  mutate(year = 2017)
+df
+#> # A tibble: 100 x 4
+#>      No. Title            `Artist(s)`                   year
+#>    <int> <chr>            <chr>                        <dbl>
+#>  1     1 "\"Shape of You… Ed Sheeran                    2017
+#>  2     2 "\"Despacito (R… Luis Fonsi and Daddy Yankee…  2017
+#>  3     3 "\"That's What … Bruno Mars                    2017
+#>  4     4 "\"Humble\""     Kendrick Lamar                2017
+#>  5     5 "\"Something Ju… The Chainsmokers and Coldpl…  2017
+#>  6     6 "\"Bad and Bouj… Migos featuring Lil Uzi Vert  2017
+#>  7     7 "\"Closer\""     The Chainsmokers featuring …  2017
+#>  8     8 "\"Body Like a … Sam Hunt                      2017
+#>  9     9 "\"Believer\""   Imagine Dragons               2017
+#> 10    10 "\"Congratulati… Post Malone featuring Quavo   2017
+#> # … with 90 more rows
+#> 
+get_wiki_100 <- function(year) {
+  
+  ## same code as before, replacing 2017 with year.
+  url <- paste0("https://en.wikipedia.org/wiki/Billboard_Year-End_Hot_100_singles_of_", year)
+  
+  h <- read_html(url)
+  
+  tab <- h %>% html_nodes("table")
+  df <- tab[[1]] %>% html_table() %>%
+    mutate(year = year)
+  
+  ## tell our function to return the dataframe `df`
+  return(df) 
+}
+
+get_wiki_100(year = 2017)
+#> # A tibble: 100 x 4
+#>      No. Title            `Artist(s)`                   year
+#>    <int> <chr>            <chr>                        <dbl>
+#>  1     1 "\"Shape of You… Ed Sheeran                    2017
+#>  2     2 "\"Despacito (R… Luis Fonsi and Daddy Yankee…  2017
+#>  3     3 "\"That's What … Bruno Mars                    2017
+#>  4     4 "\"Humble\""     Kendrick Lamar                2017
+#>  5     5 "\"Something Ju… The Chainsmokers and Coldpl…  2017
+#>  6     6 "\"Bad and Bouj… Migos featuring Lil Uzi Vert  2017
+#>  7     7 "\"Closer\""     The Chainsmokers featuring …  2017
+#>  8     8 "\"Body Like a … Sam Hunt                      2017
+#>  9     9 "\"Believer\""   Imagine Dragons               2017
+#> 10    10 "\"Congratulati… Post Malone featuring Quavo   2017
+#> # … with 90 more rows
+#> 
+library(purrr)
+year_list <- list(2017, 2018, 2019, 2020, 2021)
+year_list
+#> [[1]]
+#> [1] 2017
+#> 
+#> [[2]]
+#> [1] 2018
+#> 
+#> [[3]]
+#> [1] 2019
+#> 
+#> [[4]]
+#> [1] 2020
+#> 
+#> [[5]]
+#> [1] 2021
+
+df_all <- map(year_list, get_wiki_100)
+df_all ## a list of data frames, one for each year
+#> [[1]]
+#> # A tibble: 100 x 4
+#>      No. Title            `Artist(s)`                   year
+#>    <int> <chr>            <chr>                        <dbl>
+#>  1     1 "\"Shape of You… Ed Sheeran                    2017
+#>  2     2 "\"Despacito (R… Luis Fonsi and Daddy Yankee…  2017
+#>  3     3 "\"That's What … Bruno Mars                    2017
+#>  4     4 "\"Humble\""     Kendrick Lamar                2017
+#>  5     5 "\"Something Ju… The Chainsmokers and Coldpl…  2017
+#>  6     6 "\"Bad and Bouj… Migos featuring Lil Uzi Vert  2017
+#>  7     7 "\"Closer\""     The Chainsmokers featuring …  2017
+#>  8     8 "\"Body Like a … Sam Hunt                      2017
+#>  9     9 "\"Believer\""   Imagine Dragons               2017
+#> 10    10 "\"Congratulati… Post Malone featuring Quavo   2017
+#> # … with 90 more rows
+#> 
+#> [[2]]
+#> # A tibble: 100 x 4
+#>      No. Title           `Artist(s)`                    year
+#>    <int> <chr>           <chr>                         <dbl>
+#>  1     1 "\"God's Plan\… Drake                          2018
+#>  2     2 "\"Perfect\""   Ed Sheeran                     2018
+#>  3     3 "\"Meant to Be… Bebe Rexha featuring Florida…  2018
+#>  4     4 "\"Havana\""    Camila Cabello featuring You…  2018
+#>  5     5 "\"Rockstar\""  Post Malone featuring 21 Sav…  2018
+#>  6     6 "\"Psycho\""    Post Malone featuring Ty Dol…  2018
+#>  7     7 "\"I Like It\"" Cardi B, Bad Bunny and J Bal…  2018
+#>  8     8 "\"The Middle\… Zedd, Maren Morris and Grey    2018
+#>  9     9 "\"In My Feeli… Drake                          2018
+#> 10    10 "\"Girls Like … Maroon 5 featuring Cardi B     2018
+#> # … with 90 more rows
+#> 
+#> [[3]]
+#> # A tibble: 100 x 4
+#>      No. Title            `Artist(s)`                   year
+#>    <int> <chr>            <chr>                        <dbl>
+#>  1     1 "\"Old Town Roa… Lil Nas X featuring Billy R…  2019
+#>  2     2 "\"Sunflower\""  Post Malone and Swae Lee      2019
+#>  3     3 "\"Without Me\"" Halsey                        2019
+#>  4     4 "\"Bad Guy\""    Billie Eilish                 2019
+#>  5     5 "\"Wow\""        Post Malone                   2019
+#>  6     6 "\"Happier\""    Marshmello and Bastille       2019
+#>  7     7 "\"7 Rings\""    Ariana Grande                 2019
+#>  8     8 "\"Talk\""       Khalid                        2019
+#>  9     9 "\"Sicko Mode\"" Travis Scott                  2019
+#> 10    10 "\"Sucker\""     Jonas Brothers                2019
+#> # … with 90 more rows
+#> 
+#> [[4]]
+#> # A tibble: 100 x 4
+#>      No. Title                `Artist(s)`               year
+#>    <int> <chr>                <chr>                    <dbl>
+#>  1     1 "\"Blinding Lights\… The Weeknd                2020
+#>  2     2 "\"Circles\""        Post Malone               2020
+#>  3     3 "\"The Box\""        Roddy Ricch               2020
+#>  4     4 "\"Don't Start Now\… Dua Lipa                  2020
+#>  5     5 "\"Rockstar\""       DaBaby featuring Roddy …  2020
+#>  6     6 "\"Adore You\""      Harry Styles              2020
+#>  7     7 "\"Life Is Good\""   Future featuring Drake    2020
+#>  8     8 "\"Memories\""       Maroon 5                  2020
+#>  9     9 "\"The Bones\""      Maren Morris              2020
+#> 10    10 "\"Someone You Love… Lewis Capaldi             2020
+#> # … with 90 more rows
+#> 
+#> [[5]]
+#> # A tibble: 100 x 4
+#>      No. Title              `Artist(s)`                 year
+#>    <int> <chr>              <chr>                      <dbl>
+#>  1     1 "\"Levitating\""   Dua Lipa                    2021
+#>  2     2 "\"Save Your Tear… The Weeknd and Ariana Gra…  2021
+#>  3     3 "\"Blinding Light… The Weeknd                  2021
+#>  4     4 "\"Mood\""         24kGoldn featuring Iann D…  2021
+#>  5     5 "\"Good 4 U\""     Olivia Rodrigo              2021
+#>  6     6 "\"Kiss Me More\"" Doja Cat featuring SZA      2021
+#>  7     7 "\"Leave the Door… Silk Sonic (Bruno Mars an…  2021
+#>  8     8 "\"Drivers Licens… Olivia Rodrigo              2021
+#>  9     9 "\"Montero (Call … Lil Nas X                   2021
+#> 10    10 "\"Peaches\""      Justin Bieber featuring D…  2021
+#> # … with 90 more rows
+
+df_2017_present <- bind_rows(df_all)
+
+ df_2017_present %>%
+  mutate(Title = str_remove_all(Title, pattern = "\"")) %>% ## get rid of \ in title
+  rename(no = No., 
+         title = Title, 
+         artist = `Artist(s)`) ## make column names match with billboard package
+
+wiki_tibble <- as_tibble(wiki_hot_100s) %>% ## convert billboard data to tibble
+  mutate(year = as.numeric(year),
+         no = as.integer(no)) ## change variable types to match with scraped data
+#> Warning in mask$eval_all_mutate(quo): NAs introduced by
+#> coercion
+
+hot100_df <- bind_rows(wiki_tibble, df_2017_present)
+
+hot100_df
+
+```
+6)
+```{r}
+ sort_hot100 <- hot100_df %>%
+  as_tibble() %>%
+  filter(year <= 2020 & year >= 2010) %>%
+  group_by(artist) %>%
+  summarise(nsongs = n()) %>% arrange(desc(nsongs)) %>%
+  slice(2:11) %>%
+  mutate(artist = fct_reorder(artist, nsongs))
+
+sort_hot100
+
+ggplot(data = sort_hot100, aes(x = artist,
+                             y = nsongs)) + 
+  geom_col() + 
+  coord_flip()
+
+```
+7)
+Sometimes we want data from a public website that isn’t provided in a file format. To obtain this data, you’ll need to use web scraping, and the easiest way to do this in R is with the rvest package. If we want to iterate over a span of years, using the purrr package is the least tedious and more effective way of doing so, by using functional programming concepts to iterate.
+
+8)
+```{r}
+library(rvest)
+library(tidyverse)
+
+# url <- https://en.wikipedia.org/wiki/COVID-19_pandemic_by_country_and_territory
+```
+ I was kinda confused on how do do this. Could we briefly go over it in class some time if we have time?
+
+Back to 5.2: More tidyverse Review: Happy Planet Index
+
+5.2.1
+```{r}
+library(tidyverse)
+hpi_df <- read_csv("/Users/gracewysocki/Desktop/Data Vis/data/hpi-tidy.csv")
+#> Rows: 151 Columns: 11
+#> ── Column specification ────────────────────────────────────
+#> Delimiter: ","
+#> chr (3): Country, GovernanceRank, Region
+#> dbl (8): HPIRank, LifeExpectancy, Wellbeing, HappyLifeYe...
+#> 
+#> ℹ Use `spec()` to retrieve the full column specification for this data.
+#> ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+hpi_df
+#> # A tibble: 151 x 11
+#>    HPIRank Country   LifeExpectancy Wellbeing HappyLifeYears
+#>      <dbl> <chr>              <dbl>     <dbl>          <dbl>
+#>  1     109 Afghanis…           48.7      4.76           29.0
+#>  2      18 Albania             76.9      5.27           48.8
+#>  3      26 Algeria             73.1      5.24           46.2
+#>  4     127 Angola              51.1      4.21           28.2
+#>  5      17 Argentina           75.9      6.44           55.0
+#>  6      53 Armenia             74.2      4.37           41.9
+#>  7      76 Australia           81.9      7.41           65.5
+#>  8      48 Austria             80.9      7.35           64.3
+#>  9      80 Azerbaij…           70.7      4.22           39.1
+#> 10     146 Bahrain             75.1      4.55           43.5
+#> # … with 141 more rows, and 6 more variables:
+#> #   Footprint <dbl>, HappyPlanetIndex <dbl>,
+#> #   Population <dbl>, GDPcapita <dbl>,
+#> #   GovernanceRank <chr>, Region <chr>
+#> 
+```
+```{r}
+ggplot(data = hpi_df, aes(x = Footprint, y = Wellbeing)) +
+  geom_point()
+```
+
+```{r}
+hpi_us <- hpi_df %>% filter(Country == "United States of America" |
+                             Country == "Kenya" | 
+                            Country == "Brazil")
+hpi_us
+#> # A tibble: 1 x 11
+#>   HPIRank Country    LifeExpectancy Wellbeing HappyLifeYears
+#>     <dbl> <chr>               <dbl>     <dbl>          <dbl>
+#> 1     105 United St…           78.5      7.16           61.3
+#> # … with 6 more variables: Footprint <dbl>,
+#> #   HappyPlanetIndex <dbl>, Population <dbl>,
+#> #   GDPcapita <dbl>, GovernanceRank <chr>, Region <chr>
+```
+
+```{r}
+ggplot(data = hpi_df, aes(x = Footprint, y = Wellbeing)) +
+  geom_point() +
+  geom_label(data = hpi_us, aes(label = Country)) ## specify
+```
+```{r}
+library(ggrepel)
+ggplot(data = hpi_df, aes(x = Footprint, y = Wellbeing)) +
+  geom_point() +
+  geom_label_repel(data = hpi_us, aes(label = Country)) +
+  geom_point(data = hpi_us, size = 3, shape = 1) ## create a second point that is an open circle (shape = 1) with a larger size (size = 3) to surround the United States point on the scatterplot
+```
+5.2.2 Plotly
+```{r}
+#install.packages("plotly")
+library(plotly)
+#> 
+#> Attaching package: 'plotly'
+#> The following object is masked from 'package:ggplot2':
+#> 
+#>     last_plot
+#> The following object is masked from 'package:stats':
+#> 
+#>     filter
+#> The following object is masked from 'package:graphics':
+#> 
+#>     layout
+#>     
+plot1 <- ggplot(data = hpi_df, aes(x = Footprint, y = Wellbeing)) +
+  geom_point()
+
+ggplotly(plot1)
+```
+```{r}
+plot1 <- ggplot(data = hpi_df, aes(x = Footprint, y = Wellbeing,
+                                   label = Country)) +
+  geom_point()
+
+ggplotly(plot1, tooltip = "label")
+```
+
+Exercise 2:
+```{r}
+plotly_df <- hot100_df %>%
+  as_tibble() %>%
+  filter(year <= 2020 & year >= 2010) %>%
+  group_by(artist) %>%
+  summarise(nsongs = n()) %>% arrange(desc(nsongs)) %>% slice(2:419)
+
+plotly_df
+
+plot_artist <- ggplot(data = plotly_df, aes(x = artist, y = nsongs,
+                                   label = artist)) +
+  geom_point()
+
+ggplotly(plot_artist)
+```
+
+Exercise 3:
+adv: 
+-interesting
+-allows user to explore
+
+dis:
+-requires a computer/cannot be printed out
+-adds extra stuff
+-bad for making a particular point about the graph
+
+5.2.3 Themes and Colour Changes
+```{r}
+ggplot(data = hpi_df, aes(x = Footprint, y = Wellbeing)) +
+  geom_point() +
+  geom_label_repel(data = hpi_us, aes(label = Country)) +
+  geom_point(data = hpi_us, size = 3, shape = 1) +
+  labs(title = "Countries with a Higher Ecological Footprint Tend to Have Citizens with Higher Wellbeing", ## add title
+    subtitle = "Wellbeing is on a 1-10 scale", ## add subtitle (smaller text size than the title)
+    caption = "Data Source: http://happyplanetindex.org/countries", ## add caption to the bottom of the figure
+    x = "Ecological Footprint", ## change x axis label
+    y = "Wellbeing") ## change y axis label
+```
+
+5.2.4 Changing A Colour Scale
+
+```{r}
+ggplot(data = hpi_df, aes(x = Footprint, y = HappyLifeYears, colour = Region)) +
+  geom_point() +
+  scale_colour_brewer(palette = "Accent")
+```
+Exercise 5
+```{r}
+ggplot(data = hpi_df, aes(x = Footprint, y = HappyLifeYears, colour = Region)) +
+  geom_point() +
+  scale_colour_brewer(palette = "Paired")
+
+```
+
+
+```{r}
+ggplot(data = hpi_df, aes(x = Footprint, y = HappyLifeYears, colour = Region)) +
+  geom_point() +
+  scale_colour_viridis_d(option = "plasma")
+```
+Exercise 6:
+_d = catergorical/discrete values
+_c = continuous variables
+_b = binning a continuous variable
+
+5.2.5: Faceting
+Is more useful if:
+-there are more categories
+-there is a lot of overlap in the groups

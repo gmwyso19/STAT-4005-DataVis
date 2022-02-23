@@ -33,12 +33,15 @@ library(leaflet)
 library(dplyr)
 library(maps)
 
-leaflet(us.cities) %>% addTiles() %>% addCircleMarkers(data = us.cities)
-
 us.cities <- us.cities %>% filter(capital == 2) %>% mutate(state_info = paste(name, capital == 2, pop))
 
 us.cities$state_info
 
+leaflet(us.cities) %>% addTiles() %>% addCircleMarkers(data = us.cities)
+```
+
+
+```{r}
 #leaflet(us.cities) %>% addTiles() %>% addCircleMarkers(data = us.cities, lat = ~lat, lng = ~long, state_info = ~state_info)
 
 ```

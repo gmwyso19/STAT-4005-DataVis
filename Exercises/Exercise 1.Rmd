@@ -1,0 +1,93 @@
+---
+title: 'Exercise 1: 3.1, 3.2, & 4.1'
+author: "grace wysocki"
+date: "1/23/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+3.1 About You
+In a .md or .Rmd file, provide answers to the following questions.
+
+What is your name and what is your class year (first-year, sophomore, junior, senior)? 
+
+Grace Wysocki: Junior
+
+What is/are your major(s) and minor(s), either actual or intended?
+
+I am a statistics major with a minor in education.
+
+Why did you decide to take this course?
+
+I decided to take this course because I took your Intro to Data Science class last semester and really liked it, and thought that this class looked interesting. This class also counts as a 300 level stats elective so that also fueled my interest.
+
+In what semester and year did you take STAT/DATA 234?
+
+I took STAT 234 in the fall of 2021.
+
+Have you taken STAT 213? Have you taken CS 140?
+
+Yes I have taken both.
+
+Have you used Git before? If so, in what context?
+
+No I have not.
+
+Are you currently primarily using R Studio on your desktop or with SLU’s R Studio server?
+
+I am using the desktop version.
+
+What is your hometown: city, state, country?
+
+Hoosick Falls, NY, USA.
+
+Do you play a sport on campus? If so, what sport? If not, what is an activity that you do on or off-campus?
+
+I am in Kappa Delta Sigma, Habitat for Humanity, and club soccer/club lacrosse.
+
+What is your favorite TV show or movie or band/musical artist?
+
+Fav tv show: The Office, New Girl, Breaking Bad
+Fav movie: Good Will Hunting, and I am also a marvel fan
+Fav band/artists: Billie Eilish, Harry Styles, Post Malone, The Lumineers, Hozier
+
+Tell me something about yourself.
+
+I met Gibby from iCarly in the basement of a mall once.
+
+What are your expectations for this class and/or what do you hope to gain from this class?
+
+I hope to have a better understanding and appreciation for Data Science. I did alright in the class last semester, but I am going to try to do a lot better this semester.
+
+3.2 Data Visualization Concepts: Part 1
+Read Sections 1.1 - 1.2 of Kearen Healy’s Data Visualization: A Practical Introduction, found here. As you read, answer the following questions in just 1 to 2 sentences.
+
+Using either Anscombe’s quartet or the income/voter turnout graph as an example, explain why it’s valuable to look at data graphically instead of examining data only with summary statistics.
+
+It is important to visualize data graphically additionally rather than just looking at the summary statistics, because graphing data can allow you to find information in the data that may not have been picked up on in a summary. In the case of the income/voter turnout graph, initially it was argued that a significant association between voter turnout and income inequality was based on a quantitative analysis of eighteen countries. When this relationship is graphed as a scatterplot, however, it immediately became clear that the quantitative association depended entirely on the inclusion of South Africa in the sample.
+
+Take a look at the bar plot in Figure 1.4. Give a couple of reasons for why the chart has “bad taste.”
+
+The graph is tasteless and has too much going on, making it hard to read. The bars are hard to read and compare. It also duplicated labels and made pointless use of three-dimensional effects, drop shadows, and other unnecessary design features.
+
+Why might you not always want to maximize the data-to-ink ratio when making charts?
+
+Viewers remember charts that standout, so sometimes simplifiying a chart to much can be detrimental to the effect it has on its audience.
+
+What do the authors mean when they say that “relative comparisons need a stable baseline” and how does that affect your ability to interpret the coloured stacked bar plot in Figure 1.11?
+
+The author is saying that to compare the bar sections it is important for the bars to be the same heights or it makes it really dificult to read. Here we face this problem becasue these bars are different heights making it hard to read.
+
+What are two key takeaways from Sections 1.1 and 1.2?
+
+One is to make sure your data is easy to read, but also stands out enough to be remembered. Another take away is to make sure to look at both the graphs of data, and the summary statistics, as it can tell you a lot about the data.
+
+What is one question that you have about the reading?
+
+I was kind of confused about the whole data-to-ink ratio concept. 
+
+4.1 Installing R and R Studio
+I already have it installed on my laptop from last semester.

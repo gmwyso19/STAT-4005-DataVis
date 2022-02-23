@@ -1,0 +1,145 @@
+---
+title: 'Section 7: Expressing Uncertainty and Variability'
+author: "Grace Wysocki"
+date: "2/14/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+#> ── Attaching packages ─────────────────── tidyverse 1.3.1 ──
+#> ✓ ggplot2 3.3.5     ✓ purrr   0.3.4
+#> ✓ tibble  3.1.2     ✓ dplyr   1.0.7
+#> ✓ tidyr   1.1.3     ✓ stringr 1.4.0
+#> ✓ readr   2.0.2     ✓ forcats 0.5.1
+#> ── Conflicts ────────────────────── tidyverse_conflicts() ──
+#> x dplyr::filter() masks stats::filter()
+#> x dplyr::lag()    masks stats::lag()
+pokemon_df <- read_csv("data/pokemon_full.csv")
+#> New names:
+#> * `` -> ...1
+#> Rows: 721 Columns: 14
+#> ── Column specification ────────────────────────────────────
+#> Delimiter: ","
+#> chr  (2): Name, Type
+#> dbl (11): ...1, HP, Attack, Defense, Speed, SpAtk, SpDef...
+#> lgl  (1): Legendary
+#> 
+#> ℹ Use `spec()` to retrieve the full column specification for this data.
+#> ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+pokemon_height <- pokemon_df %>% 
+  filter(Type %in% c("Bug", "Electric", "Fighting", "Flying",
+                     "Grass", "Steel")) %>%
+  group_by(Type) %>%
+  summarise(avg_height = mean(height)) %>%
+  mutate(Type = fct_reorder(Type, avg_height))
+ggplot(data = pokemon_height, aes(x = Type, y = avg_height)) +
+  geom_col() +
+  coord_flip()
+```
+
+Exercise 1. What can’t we see from this graphic that would be useful?
+
+We can"t see the variability/range of the heights in each type. We are also missing the counts of each type.
+
+Exercise 2. Make a different plot that shows more relevant features about the underlying data.
+
+```{r}
+pokemon_small <- pokemon_df %>% 
+  filter(Type %in% c("Bug", "Electric", "Fighting", "Flying",
+                     "Grass", "Steel")) %>% 
+  group_by(Type) %>%
+  mutate(meanheight = mean(height, na.rm = TRUE)) %>%
+  ungroup() %>%
+  arrange(meanheight) %>% 
+  mutate(Type = fct_inorder(Type))
+
+ggplot(data = pokemon_small, aes(x = Type, y = height)) +
+  geom_point(alpha = 0.3) +
+  coord_flip() +
+  geom_point(data = pokemon_height, aes(y = avg_height),  colour = "red")
+  
+```
+
+
+Exercise 3. Though we are arguing that bar plots are not generally good to show summaries of continuous data, when might we want to make a bar plot of a summary of continuous data anyway?
+
+- media has to consider the statistical knowledge of their audience
+- sometimes you do not have the underlining data, only summary stats
+- if the groupd have the same variability/distribution then it would be okay to just graph the averages
+
+```{r}
+##install.packages("openintro")
+library(openintro)
+#> Loading required package: airports
+#> Loading required package: cherryblossom
+#> Loading required package: usdata
+data(mlb_players_18)
+mlb_sum <- mlb_players_18 %>% group_by(position) %>%
+  summarise(med_hr = median(HR)) %>%
+  mutate(position = fct_reorder(position, med_hr))
+ggplot(data = mlb_sum, aes(x = position, y = med_hr)) +
+  geom_col() +
+  coord_flip()
+```
+
+Exercise 4. “Fix” the previous plot to show the underlying variability in the number of homeruns for each player position by making a set of boxplots.
+
+```{r}
+mlb_players_18 <- mlb_players_18 %>% mutate(position = fct_reorder(position, HR, .fun = median))  %>% group_by(position) %>% 
+  mutate(nplayers = n())
+
+p1 <- ggplot(data = mlb_players_18, aes(x = position, y = HR)) +
+  geom_boxplot() +
+  coord_flip()
+```
+
+
+Exercise 5. Use the plotly package to give the sample size for each group when a user hovers over the boxes.
+
+```{r}
+library(plotly)
+ggplotly(p1)
+
+mlb_players_18 %>% group_by(position) %>% 
+  summarise(nplayers = n())
+```
+
+7.3 Stat 113 survey
+
+```{r}
+statsurvey_df <- read_csv("data/stat113_survey.csv")
+#> Rows: 5322 Columns: 21
+#> ── Column specification ────────────────────────────────────
+#> Delimiter: ","
+#> chr (10): time_both, time_semester, time_year, Smoke, Ha...
+#> dbl (11): Year, Hgt, Wgt, Sibs, Birth, Exercise, TV, GPA...
+#> 
+#> ℹ Use `spec()` to retrieve the full column specification for this data.
+#> ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+#> 
+statsurvey_df %>%
+  filter(!is.na(Tattoo)) %>%
+  group_by(time_both, Tattoo) %>% 
+  summarise(ncount = n()) %>% 
+  ungroup() %>% 
+  group_by(time_both) %>% 
+  mutate(ntotal = sum(ncount)) %>% 
+  ungroup() %>% 
+  filter(Tattoo == "Yes") %>% mutate(prop = ncount/ntotal,
+                                     se = sqrt(prop * (1-prop) / ntotal),
+                                     l_se = prop - se,
+                                     u_se = prop + se)
+
+ggplot(data = statsurvey_df, aes(x = time_both,
+                                 fill = Tattoo)) +
+  geom_bar()
+```
+
+
+
+

@@ -1,0 +1,94 @@
+---
+title: "Untitled"
+author: "Grace Wysocki"
+date: "2/20/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Complete this quiz in a .Rmd file. To turn in the quiz, push both a .Rmd file and a knitted .html file to your GitHub site.
+
+Statement of Integrity: Copy and paste the following statement and then sign your name (by typing it) on the line below.
+
+“All work presented is my own. I have not communicated with or worked with anyone else on this quiz.”
+
+Grace Wysocki
+
+Collaboration Reminder: You may not communicate with or work with anyone else on this quiz, but you may use any of our course materials or materials on the Internet.
+
+
+Question 1 (20 points). Examine the alcohol.csv data set that you may have used as an introductory data set in STAT/DATA 234:
+```{r}
+library(tidyverse)
+library(here)
+alcohol_df <- read_csv(here("data/alcohol.csv"))
+alcohol_df
+```
+
+The data set has the following variables on countries throughout the world:
+
+country, the name of the country
+beer_servings, the number of beer servings per person per year
+spirit_servings, the number of spirit servings per person per year
+wine_servings, the number of wine servings per person per year
+total_litres_of_pure_alcohol, the number of litres of pure alcohol consumed per person per year
+
+Construct a map of the beer_servings variable. You should choose an appropriate projection and change the default colour scheme of your map.
+
+```{r}
+library(tidyverse)
+library(leaflet)
+library(dplyr)
+library(maps)
+library(ggplot2)
+
+map_data <- map_data("world")
+
+map_edit <- rename(map_data, country = region)
+
+map_full <- left_join(map_edit, alcohol_df, by = "country") 
+
+#map_full <- map_data("world")
+#ggplot(data = map_data, aes(x = long, y = lat, group = group) +
+  #geom_map(data = map_data, map = map_data,
+    #aes(x = long, y = lat, map_id = region),
+    #color = "white", fill = "lightgray", size = 0.1) + 
+     #coord_map(projection = "albers") +
+  #theme_void() +
+  #scale_fill_viridis_b()
+
+  
+```
+
+```{r}
+library(tidyverse)
+library(leaflet)
+library(dplyr)
+library(maps)
+library(ggplot2)
+
+map_data <- map_data("world")
+
+map_edit <- rename(map_data, country = region)
+
+map_full <- left_join(map_edit, alcohol_df, by = "country") 
+
+#ggplot() +
+  #geom_map(
+    #data = map_full, map = map_data,
+    #aes(long, lat, map_id = country)
+  #) + geom_polygon(aes(fill = beer_servings, color = ))
+
+#ggplot(data = map_full) +
+  #geom_sf(aes(fill = beer_servings)) + scale_fill_viridis(option="magma")
+```
+I tried.
+
+Question 2 (5 points). Give an example of a question of interest about the alcohol data where you would want to construct a visualization other than a map to answer the question. What type of visualization would you construct instead?
+
+What regions of the work consume the most alcohol?
+This would be best to answer with a table accompanied by a graph such as a lollipop graph or a bar graph, where countries are grouped into regions to show ammounts.
+

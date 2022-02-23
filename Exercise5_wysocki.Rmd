@@ -1,0 +1,24 @@
+---
+title: 'Exercise 5: Section 9.1'
+author: "Grace Wysocki"
+date: "2/20/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Exercise 1. What makes the app given in the first tab interactive? In other words, what is a user allowed to change in the app?
+
+The app allows for the user to change the n, intercept, slope, and standard deviation of residuals.
+
+Exercise 2. What are the outputs of the app? Are the outputs graphs, tables, or both?
+
+The output contains both graphs and tables, with results ranging from Line of Best Fit and sources of variablitiy including Total, Residual, and Regression.
+
+Now, examine one of the apps at this r studio shiny gallery.
+
+Exercise 3. Write a short one paragraph description about the app you selected, including what the app allows the user to change, what the output is, and one interesting thing you found in the app.
+
+I chose the app the shows the birth locations of all players in the 2018 FIFA World Cup. The app allows users to filter out countries to show just one country's player's birth location. The app also allows users to see the name of each player by hovering over the markers. An addition feature that I like is that the markers are categorized by the team's country flag. The output is a worlf map with markers indicating individaul player's birthplace, and the team they play for now indicated by the marker design.
