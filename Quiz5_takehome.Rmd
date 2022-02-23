@@ -36,7 +36,7 @@ stat113_survey
 
 ```{r}
 survey_edit <- stat113_survey %>% filter(!is.na(Facebook)) %>% separate(time_both, into = c("semester", "year"),
-                               sep = 1) %>%
+                              sep = 1) %>%
   arrange(year, desc(semester)) %>%
   unite(col = "time_both", c(semester, year)) %>%
   mutate(time_both = fct_inorder(time_both))
