@@ -1,0 +1,111 @@
+---
+title: "Midterm Tutorial 1"
+author: "Grace Wysocki"
+date: "3/7/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Complete this exam in a .Rmd file. To turn in the exam, push 4 .Rmd files and 4 knitted .html files to your GitHub repository.
+
+Statement of Integrity: Copy and paste the following statement into your first .Rmd file and then sign your name (by typing it) on the line below.
+
+“All work presented is my own. I have not communicated with or worked with anyone else on this exam.” 
+
+Grace Wysocki
+
+Collaboration Reminder: You may not communicate with or work with anyone else on this exam, but you may use any of our course materials or materials on the Internet.
+
+Mini-Tutorial 1: Data Visualization Concepts
+
+Topics to cover:
+-Grammar of Graphics
+-One topic from the Data Visualization Reading of your choice.
+-A second topic from the Data Visualization Reading of your choice.
+
+Introduction Statement:
+
+Data visualization is used to allow for viewers to easily see trends in particular data set, and draw conclusions about data, without needing to understand numerical summary statistics. Being able to visualize and understand data graphics, is crucial to making decisions based upon real data, in the real world. 
+
+Topic 1: Grammar of Graphics Parameters
+
+Grammar of graphics allows users to gain a deeper understanding of the data and graphics, but more importantly, gain an understanding of the structures and methods that underlies the statistics graphics. There are 7 parameters in grammar of graphics; <DATA> (the data set), <MAPPINGS> (an aesthetic mapping), <GEOM_FUNCTION> (a geometrical object), <STAT> (a statistical transformation), <POSITION> (a position adjustment), <FACET_FUNCTION> (subplots), and <COORDINATE_FUNCTION> (a coordinate system). In this section in particular, I will be focusing on three parameters; <DATA>, <GEOM_FUNCTION>, and <FACET_FUNCTION>
+
+The <DATA> parameter is I think the most important parameter of them all, as it is required in our R projects in order to load in Data and give sources of information and data sets, and allows access to where and how they are stored. It also allows you to create subsets of larger data sets that you can use in your visulaization. 
+```{r}
+library(readr)
+library(tidyverse)
+library(ggplot2)
+fitness_clean <- read_csv("data/higham_fitness_clean.csv")
+#View(fitness_clean)
+```
+The higham_fitness_clean data set contains data collected from Professor Higham's Apple Watch since November 2018, that we used in STAT 234 last semester. The variables of interest for this data ste include; steps- the number of steps taken, active_cals- the number of calories burned from activity, and weekday- the day of the week.
+
+
+As you can see the data is loaded in with the read_cvs function and saved as a data set called higham_fitness_clean that is ready to be used! 
+
+The <GEOM_FUNCTION> parameter allows the user to create graphics of the data from the <DATA> parameter. Here I will be creating a scatter plot using the geom_point() fucntion.
+```{r}
+ggplot(data = fitness_clean, aes(x = steps, y = active_cals)) +
+  geom_point()
+```
+
+The <FACET_FUNCTION> enables the user the ability to separate the main graph in multiple smaller more focused graphs based on a specific variable. In this case, I will be separating the main graph into smaller graphs using the weekday variable.
+```{r}
+ggplot(data = fitness_clean, aes(x = steps, y = active_cals)) +
+  geom_point() + facet_wrap(~weekday)
+```
+This allows the user to in this cas, see what days of the week they tend walk the most, and draw conclusions based on those results.
+
+Topic 2: Stacked Graphs Make for Poor Viewer Interpretation
+
+Data visualization can be an important part of our understanding of the world around us, so it is very important that the graphics produced through data visualization produce accurate conclusions and perceptions. Reading and understanding data graphics can be tricky to someone without background in data science, and bar graphs can be very misleading to the general public, specifically when they are organized in a different manner than that of what we are used to. The Grammar of Graphics <POSITION> parameter when used in a way such as a "stacked" bar graph, can be very misleading and hard to make valid comparisons of data visualizations.
+
+```{r}
+library(readr)
+stat113_survey <- read_csv("data/stat113_survey.csv")
+#View(stat113_survey)
+```
+This data is a configuration of the STAT 113 surveys students are require to take at the beginning of the semester is enrolled in the class. I will use this data set for both part 2 and 3 of this tutorial. The variables that I will use include Smoke- whether a student smokes or not, Sex- the chosen sex of the individual, time_year- the year they took the class, and pulse- the recorded pulse of the individual after exerciseing for a period of time.
+
+Stacked Bars
+```{r}
+stat_survey <- stat113_survey %>% filter(time_year == 21)
+
+ggplot(data = stat_survey, aes(x = Smoke, fill = Sex)) +
+  geom_bar(position = "stack") + 
+  scale_fill_viridis_d()
+```
+Although this graph is not technically wrong, it does lose a lot of potential because it is hard to read. Seeing relatively how many males smoke is easy as it has a relative starting point, the x-axis, but the female counts are very difficult to read as they are relative to where the male count ends.
+
+Side-by-Side Bars
+```{r}
+ggplot(data = stat_survey, aes(x = Smoke, fill = Sex)) +
+  geom_bar(position = "dodge") + 
+  scale_fill_viridis_d()
+```
+Switching to the dodge position allowed for users to see and compare the counts more easily. The graphic also looks much nicer and better organized. Most everyone in middle school is taught how to read a bar graph, so when bar graphics are presented more "normally", it will have a more influential impact on the viewer.
+
+Topic 3: Problems of honesty and good judgment
+
+A common issue in graphics and data visualization displayed in modern media is that they are often manipulated to force conclusions upon you, rather than laying out the data and letting you draw conclusions yourself. Some graphics broadcasted to you on say certain news channels or newspapers, will be manipulated in ways that does not accurately display what the data should be showing. One of the most popular way of manipulated data that would confuse the average person is to have axies not start at zero. Obviously in some cases it can be useful to do so, especially when data points start at values far from zero, but when it makes seem more spread out or makes it look like one factor is extremely higher or lower than another, when really the scaling is off, that is when problem can arrise.
+
+```{r}
+ggplot(data = stat_survey, aes(x = Pulse, fill = Sex)) +
+  geom_bar(position = "dodge") + xlim(c(83, 90))
+```
+
+Changing axis limits will to 83-90, rather than keeping the range from 0-100+ makes users draw the conclusion that females have higher pulse on average after exercising. If you look at the whole graph without limits, you will draw a different conclusion.
+```{r}
+ggplot(data = stat_survey, aes(x = Pulse, fill = Sex)) +
+  geom_bar(position = "dodge") 
+```
+
+Here you will see a more even distribution, maybe even skewing more towards males having higher pulse rates after exercising.
+
+
+
+

@@ -1,0 +1,47 @@
+---
+title: "Midterm Tutorial 3"
+author: "Grace Wysocki"
+date: "3/7/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Mini-Tutorial 3: Expressing Uncertainty (15 points)
+
+Topics to Cover:
+-Incorporating Data Variability in Graphs
+
+Variability is a super important aspect of a good data visualization. Constructing graphs that express variability are often much better than graphs that do not, as they provide more information and do not exclude the impact of singular data points. For this reason, there is often much debate over whether bar graphs are "good" graphics to use in comparison to say a scatterplot that contains individual points. 
+
+An important aspect of data visualization as a whole to understand is how perception plays into understanding data. Some graphics are not appropriate to use for trying to draw certain conclusions. For example, bar graphs can be a helpful graphic to use when displaying information to the average viewer, as they are generally easy to read and understand. But, bar graphs are not recommended to use when trying to show factors such as variability in data sets. Here I will show you the difference between a correct graphical representation of variability versus an incorrect one.
+
+The data set I will be using is the Happy Planet Index data set. The Happy Planet Index (HPI) is a measure of how well a country uses its ecological resources to give its people long “happy” lives. The variables that I will be focusing on are; HappyLifeYears- a combination of LifeExpectancy and Wellbeing
+Footprint, Footprint- the ecological footprint per person (higher footprint means the average person in the country is less ecologically friendly), and Region- the region in the world that the country is in.
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+hpi_df <- read_csv("data/hpi-tidy.csv")
+view(hpi_df)
+```
+
+Good Graphic:
+```{r}
+ggplot(data = hpi_df, aes(x = Footprint, y = HappyLifeYears, colour = Region)) +
+  geom_point() +
+  scale_colour_brewer(palette = "Accent")
+```
+Here we can see the distribution of individual countries across each region. The data points are colored by region, but still represent a specific country's "HappyLifeYears" to ecological "Footprint" graphically which allows you to see variability of these factors among regions. 
+
+Bad Graphic:
+```{r}
+hpi_region <- hpi_df  %>% mutate(Foot_Happy_Ratio = HappyLifeYears/Footprint) %>% group_by(Region, Foot_Happy_Ratio) 
+#view(hpi_region)
+ggplot(data = hpi_region, aes(x = Region, y = Foot_Happy_Ratio)) +
+  geom_col(fill = "light blue") + ylab("Ratio of Happy Life Years to Ecological Footprint") + coord_flip() 
+```
+Here we can see a bad graphic. Although the graph includes the same variables; Region, HappyLifeYears, and Footprint, the graphic does not well represent what the graphic is meant to show. Not only does it lack a visualization of region variability by country, but it also does not show a clear image to the viewer compared to what the first graph shows.
+

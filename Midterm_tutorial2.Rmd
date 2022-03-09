@@ -1,0 +1,51 @@
+---
+title: "Midterm Tutorial 2"
+author: "Grace Wysocki"
+date: "3/7/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Mini-Tutorial 2: Mapping (15 points)
+
+Topics to Cover:
+-Either mapping with the maps package OR mapping from a shapefile.
+
+Mapping is a way to visualize data patterns across a certain space. This can be done in R using packages such as maps and leaflet. You can see mapping in data visualization on things such as a map of the United States, specific regions using functions such as geom_sf or even the world map, the mapping possibilities are endless! 
+
+I am using the county function from the maps package. This allow you to make a map of the United States that has the county lines in each state across the country drawn. Then I loaded in a data set from the United State Census Bureau I named County_census00-01 that, gives the U.S. census results from the years 2000-2001. The variables that I plan to use include the April 1, 2000 Census(which is the population census from April 1, 2000) and Area Name (which is the county names).
+```{r}
+##install.packages("maps")
+library(maps)
+library(tidyverse)
+library(ggplot2)
+
+library(readr)
+county_census <- read_csv("data/County_census00-01.csv") #load in data
+#View(county_census)
+
+county_df <- ggplot2::map_data("county") #load in county package from maps
+#view(county_df)
+ggplot(data = county_df,
+            mapping = aes(x = long, y = lat,
+                          group = group)) +
+  geom_polygon() 
+#creates a map of the United State using the map data from  county_df 
+```
+
+Here you can see that I created a map of the United States, excluding Hawaii and Alaska, that show every individual county within each state. Presented also is the corresponding latitude and longitude lines.
+
+```{r}
+us_full <- left_join(county_df, county_census, by = c("subregion" = "Area Name")) %>% mutate(April_census = "April 1, 2000 Census")
+
+#ggplot(data = us_full, aes(x = long, y = lat, group = group)) +
+  #geom_polygon(colour = "black", aes(fill = "April_census" )) +
+  #coord_map(projection = "albers", lat0 = 39, lat1 = 45) +
+  ##theme_void() +
+  #scale_fill_viridis_b()
+```
+
+Here I attempted to create graph that would have been colored by state counties, with corresponding value of census population. Unfortunately I was unable to correctly complete the code, but I was able to join the country_df and county_census data frames so that it is ready to be graphed.
